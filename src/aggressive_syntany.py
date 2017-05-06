@@ -23,7 +23,7 @@ def build_dict(infile):
     return coords, sizes
 
 def get_parser():
-    """ Parse input """
+    
     desc = "Very aggressive clustering of homologous regions based on mummer coords file"
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('coords', type=str, help="mummer show-coords output")
@@ -91,6 +91,7 @@ def _processing( infile, rchr, dist, outf ):
     coords, sizes = build_dict(infile)
     qry_chrs = list(coords.keys())
 
+    print("Primary\tHaplotig\tPrimary_Start\tPrimary_end\tHaplotig_Start\tHaplotig_End\tHaplotig_Length")
     for qchr in qry_chrs:
         refcoords = coords[qchr][0]
         qrycoords = coords[qchr][1]
