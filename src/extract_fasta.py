@@ -20,18 +20,17 @@ def main():
     _process( infile, contig )
 
 def _process( infile, contig ):
-    inhandle = open( infile, "rU" )
     fnm = contig+"_p.fa"
     pout = open( fnm, "w" )
     fnm = contig+"_h.fa"
     hout = open( fnm, "w" )
 
-    for record in SeqIO.parse( inhandle, "fasta" ):
+    for record in SeqIO.parse( infile, "fasta" ):
         if record.name.startswith(contig):
             if record.name.find("_") > 0: SeqIO.write(record,hout,"fasta")
             else: SeqIO.write(record, pout, "fasta")
 
-    inhandle.close()
+    infile.close()
     pout.close()
     hout.close()
 
