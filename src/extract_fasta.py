@@ -7,7 +7,7 @@ def get_parser():
     desc = "extract haplotigs and primary contigs"
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('contig', type=str, help="contig name")
-    parser.add_argument('inputfile', type=argparse.FileType('rU'), \
+    parser.add_argument('inputfile', nargs="?", type=argparse.FileType('rU'), \
         default=sys.stdin, help="genome sequences")
     return parser
 
