@@ -36,7 +36,7 @@ def get_gaps( rows ):
 
     n = len(rows) - 1
     gaps = [ rows[i+1][0]-rows[i][1] for i in range(n) ]
-        return gaps
+    return gaps
 
 def get_block_size( coords ):
     return [ x[1]-x[0] for x in coords ]
