@@ -7,6 +7,7 @@ A pipeline to analyze the haplotigs and primary contigs assembled by PacBio Falc
 * Biopython
 
 ## Examples
+* see folder Example
 
 ## TODO:
 * add test dataset
