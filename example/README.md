@@ -17,3 +17,10 @@ delta-filter -r -1 ${contig}.delta | show-coords -r -T -l -d -c /dev/stdin | awk
 ```
 python src/aggressive_syntany.py ${contig}.coords ${contig} > ${contig}.loc.coords
 ```
+The result is also illustrated below:
+![fig](haptools.fig.png)
+
+The top is the bubble plot showing corresponding regions of primary contig and haplotigs. Below is a mummerplot showing the filtered alignment from NUCmer run. In this example, the tiny "blue" line at the end of haplotig 000270F_002 drove the creation of the nested bubbles over the first bubble region in primary contig. By fine-tuning the -dist parameter, the nested bubbles could be resovled into two bubbles that are placed side-by-side to cover the first primary bubble, e.g.
+```
+python src/aggressive_syntany.py ${contig}.coords ${contig} -d 5000 > ${contig}.loc.coords
+```
