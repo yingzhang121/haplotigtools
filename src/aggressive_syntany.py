@@ -10,7 +10,7 @@ def build_dict(infile):
     coords = {}
     sizes = {}
 
-    for line in open( infile ):
+    for line in infile:
         fields = line.split()
         ref_st, ref_end, qry_st, qry_end = map(int, fields[0:4])
         qry_chr, qry_size = fields[14], int(fields[8])
@@ -26,7 +26,7 @@ def get_parser():
     
     desc = "Very aggressive clustering of homologous regions based on mummer coords file"
     parser = argparse.ArgumentParser(description=desc)
-    parser.add_argument('coords', type=str, help="mummer show-coords output")
+    parser.add_argument('coords', type=argparse.FileType('rU'), help="mummer show-coords output")
     parser.add_argument('ref', type=str, help="reference chromosome")
     parser.add_argument('-d', '--dist', type=int, default=15000, help="maximal distance for clustering")
     parser.add_argument('-o', '--output', type=str, default=sys.stdout, help="output file, default stdout")
