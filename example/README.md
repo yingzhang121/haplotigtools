@@ -27,3 +27,9 @@ python src/aggressive_syntany.py ${contig}.coords ${contig} -d 5000 > ${contig}.
 ```
 And the result is:
 ![fig2](bubbleplot2.png)
+
+5. As a coutesy, I also included a small R script that can produce the bubble plot. To run it:
+```R
+contig_size=125443
+Rscript --vanilla src/bubbleplot.R ${contig}.loc.coords ${contig_size}
+```
