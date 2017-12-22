@@ -33,3 +33,4 @@ And the result is:
 contig_size=125443
 Rscript --vanilla src/bubbleplot.R ${contig}.loc.coords ${contig_size}
 ```
+The output is the bubbleplot.pdf file.
