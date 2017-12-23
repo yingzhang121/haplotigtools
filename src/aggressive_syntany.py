@@ -6,6 +6,11 @@ from itertools import chain
 get_range = lambda x: [min(chain.from_iterable(x)), max(chain.from_iterable(x))]
 
 def build_dict(infile):
+    """
+    The data structure of alignment coordinates is dictionary.
+    This function is to build the dictionary.
+    Argument: infile: input file, should be output from mummer delta-filter.
+    """
 
     coords = {}
     sizes = {}
@@ -23,6 +28,7 @@ def build_dict(infile):
     return coords, sizes
 
 def get_parser():
+    """ Parse command line. """
     
     desc = "Very aggressive clustering of homologous regions based on mummer coords file"
     parser = argparse.ArgumentParser(description=desc)
@@ -33,15 +39,30 @@ def get_parser():
     return parser
 
 def get_gaps( rows ):
+    """
+    Calculate gap size between two adjacent alignment blocks.
+    Argument: rows - list of coordinates of alignment blocks.
+    """
 
     n = len(rows) - 1
     gaps = [ rows[i+1][0]-rows[i][1] for i in range(n) ]
     return gaps
 
 def get_block_size( coords ):
+    """
+    Calculate the size of alignment blocks.
+    Argument: coords - list of coordinates of alignment blocks.
+    """
     return [ x[1]-x[0] for x in coords ]
 
 def _scan_reverse(gaps, center, dist):
+    """
+    Scan along reference sequences (starting at the largest alignment block, or the center block), and check whether two adjacent alignment blocks are farther than a given distance. Once two blocks are farther apart, then stop scanning.
+    Arguments:
+        gaps - list of gap size between adjacent alignment blocks
+        center - the index of largest alignment blocks
+        dist - distance
+    """
 
     for i in range( 0, center ):
         idx_gap = center - 1 - i
@@ -50,6 +71,13 @@ def _scan_reverse(gaps, center, dist):
     return 0
 
 def _scan_forward( gaps, center, dist ):
+    """
+    Scan along reference sequences (starting at the largest alignment block, or the center block), and check whether two adjacent alignment blocks are farther than a given distance. Once two blocks are farther apart, then stop scanning.
+    Arguments:
+        gaps - list of gap size between adjacent alignment blocks
+        center - the index of largest alignment blocks
+        dist - distance
+    """
 
     n = len(gaps)
     for i in range( center, n ):
@@ -59,9 +87,22 @@ def _scan_forward( gaps, center, dist ):
     return n+1
     
 def scan( gaps, center, dist ):
+    """
+    Determine the number of alignment blocks that can be "merged" into the final "giant" block given the defined distance threshold.
+    Arguments:
+        gaps - list of gap size between adjacent alignment blocks
+        center - the index of largest alignment blocks
+        dist - distance
+    """
     return _scan_reverse( gaps, center, dist ), _scan_forward( gaps, center, dist )
 
 def cluster_regions( coords, dist ):
+    """
+    Merge alignment blocks into a giant block if the distance between adjacent original blocks is smaller than dist threshold.
+    Arguments:
+        coords -  list of coordinates of alignment blocks
+        dist - distance threshold
+    """
 
     gaps = get_gaps( coords )
     blocks = get_block_size( coords )
@@ -73,6 +114,14 @@ def cluster_regions( coords, dist ):
     return get_range( coords[stblock:endblock] )
 
 def clustering( rcoords, qcoords, length, dist ):
+    """
+    For each query chromosome and matching reference chromosome, cluster alignment blocks if their distance is no greater than dist threshold.
+    Arguments:
+        rcoords - list of coordinates of alignment blocks in reference
+        qcoords - list of coordinates of alignment blocks in query
+        length - size of query sequences
+        dist - distance threshold
+    """
 
     # add an interative routine to be more aggressive on larger regions
     newqsize = 0
@@ -87,11 +136,19 @@ def clustering( rcoords, qcoords, length, dist ):
             newqsize = qsize
 
 def _processing( infile, rchr, dist, outf ):
+    """
+    For each reference chromosome, group alignment blocks from each possible query chromosomes.
+    Arguments:
+        infile - input file, the output from mummer delta-filter command
+        rchr - reference chromosome
+        dist - distance threshold
+        outf - output file
+    """
 
     coords, sizes = build_dict(infile)
     qry_chrs = list(coords.keys())
 
-    print("Primary\tHaplotig\tPrimary_Start\tPrimary_end\tHaplotig_Start\tHaplotig_End\tHaplotig_Length")
+    print("Primary\tHaplotig\tPrimary_Start\tPrimary_end\tHaplotig_Start\tHaplotig_End\tHaplotig_Length", file=outf)
     for qchr in qry_chrs:
         refcoords = coords[qchr][0]
         qrycoords = coords[qchr][1]

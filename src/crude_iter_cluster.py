@@ -37,6 +37,12 @@ def get_parser():
     return parser
 
 def cluster_hom_regions( coords, dist ):
+    """
+    Set up a procedure that will cluster/merge alignment blocks until two alignment blocks are too far away.
+    Arguments:
+        coords - list of coordinates of alignment blocks.
+        dist - distance threshold.
+    """
 
     while True:
         prev = len( coords )
@@ -89,6 +95,7 @@ def gap_size( l ):
         return st2 - end1 if st2 >= end1 else st1 - end2
 
 def is_inclusive( l ):
+    """ Handle case when one alignment block is entirely contained by another alignment block. """
 
     sum_size = get_size(l)
     size1, size2 = get_ind_size( l )
@@ -98,6 +105,7 @@ def is_inclusive( l ):
     else: return 0
 
 def handle_overlay( rl, ql, dist ):
+    """ Handle case when two alignment blocks overlaps. """
     wh = is_inclusive( rl )
     if wh == 1:
         return get_range(rl), ql[0:2]
@@ -107,6 +115,9 @@ def handle_overlay( rl, ql, dist ):
         return get_range(rl), get_range(ql)
 
 def clustering( coords, dist ):
+    """
+    Start from the first alignment blocks, and go along the reference sequences. If the next alignment blocks is located within dist, then merge the first and second alignmetn blocks. Continue this process, until hit the end.
+    """
 
     # initialize
     results = []
