@@ -10,7 +10,3 @@ A pipeline to analyze the haplotigs and primary contigs assembled by PacBio Falc
 * see folder Example
 * The result is also illustrated below.
 ![](example/haptools.fig.png)
-
-## TODO:
-* add test dataset
-* add usage example
